@@ -105,6 +105,7 @@ void compressing(int **matrix, int nrow, int ncol)
 	vector<int> JA;
 	vector<int> JR;
 	
+	//"сжатие" матрицы
 	for (int i = 0; i < nrow; i++) {
 			JR.push_back(AN.size());
 			for (int j = 0; j < ncol; j++) {
@@ -114,29 +115,30 @@ void compressing(int **matrix, int nrow, int ncol)
 				}
 			}
 		}
-		JR.push_back(AN.size());
+	JR.push_back(AN.size());
 
-		if (AN.size() > 0 && JR.size() > 0 && JA.size() > 0) {
-			cout << "AN: [";
-			for (int point : AN) {
-				cout.width(3);
-				cout << point << " ";
-			}
-			cout << "]" << endl;
-			cout << "JA: [";
-			for (int point : JA) {
-				cout.width(3);
-				cout << point << " ";
-			}
-			cout << "]" << endl;
-			cout << "JR: [";
-			for (int point : JR) {
-				cout.width(3);
-				cout << point << " ";
-			}
-			cout << "]" << endl;
+	//печать сжатой матрицы
+	if (AN.size() > 0 && JR.size() > 0 && JA.size() > 0) {
+		cout << "AN: [";
+		for (int point : AN) {
+			cout.width(3);
+			cout << point << " ";
 		}
-		else {
-			cout << "NULL" << endl;
+		cout << "]" << endl;
+		cout << "JA: [";
+		for (int point : JA) {
+			cout.width(3);
+			cout << point << " ";
 		}
+		cout << "]" << endl;
+		cout << "JR: [";
+		for (int point : JR) {
+			cout.width(3);
+			cout << point << " ";
+		}
+		cout << "]" << endl;
+		}
+	else {
+		cout << "NULL" << endl;
+	}
 }
