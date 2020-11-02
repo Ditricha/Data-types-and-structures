@@ -8,7 +8,47 @@
 
 using namespace std;
 
-int** create_rand_smatrix(int nrow, int ncol, float density_percent, float negative_percent)
+int** create_rand_smatrix(int nrow, int ncol, int density_percent, int negative_percent);
+void print_rand_smatrix(int **matrix, int nrow, int ncol);
+void compressing(int **matrix, int nrow, int ncol);
+
+
+int main()
+{
+	int **A;
+	int n_rows1, n_cols1;
+	int nz1, nz_neg1;
+
+	int **B;
+	int n_rows2, n_cols2;
+	int nz2, nz_neg2;
+
+	cout << "-Matrix 1 generation-" << endl;
+	cout << "Inpute rows, columns, density (percentage) of non-zero entries and percentage of negative numbers" << endl;
+	cin >> n_rows1 >> n_cols1 >> nz1 >> nz_neg1;
+
+	A = create_rand_smatrix(n_rows1, n_cols1, nz1, nz_neg1);
+	print_rand_smatrix(A, n_rows1, n_cols1);
+	cout << endl;
+	compressing(A, n_rows1, n_cols1);
+
+	cout << endl << endl << "-Matrix 2 generation-" << endl;
+	cout << "Inpute rows, columns, density (percentage) of non-zero entries and percentage of negative numbers" << endl
+		<< "The numbers must be equal to the number of columns (rows) or rows (columns) of the first matrix." << endl;
+	cin >> n_rows2 >> n_cols2 >> nz2 >> nz_neg2;
+
+	B = create_rand_smatrix(n_rows2, n_cols2, nz2, nz_neg2);
+	print_rand_smatrix(B, n_rows2, n_cols2);
+	cout << endl;
+	compressing(B, n_rows2, n_cols2);
+
+	getchar();
+	getchar();
+
+	return 0;
+}
+
+int** create_rand_smatrix(int nrow, int ncol, int density_percent, int negative_percent)
 {
 	int negative = 0;
 	int total_num = nrow * ncol;
@@ -17,14 +57,12 @@ int** create_rand_smatrix(int nrow, int ncol, float density_percent, float negat
 	int pos_nz = num_nz - neg_nz;
 	int i;
 	
-	//не работает
-	/*int **matrix = new int* [nrow];
+	int **matrix = new int*[nrow];
 	for (i = 0; i < nrow; i++)
-		matrix[i] = new int [ncol];*/
-	
-	int **matrix = (int**)calloc(nrow, sizeof(int));
-	for (i = 0; i < nrow; i++)
-		matrix[i] = (int*)calloc(ncol, sizeof(int));
+		matrix[i] = new int[ncol];
+	for (j = 0; j < nrow; j++)
+		for (k = 0; k < ncol; k++)
+			matrix[j][k] = 0;
 
 	srand(time(0));
 
@@ -48,11 +86,11 @@ int** create_rand_smatrix(int nrow, int ncol, float density_percent, float negat
 	return matrix;
 }
 
-void print_rand_smatrix(int **matrix, int nrows, int ncols)
+void print_rand_smatrix(int **matrix, int nrow, int ncol)
 {
 	cout << endl << "-Random matrix-" << endl;
-	for (int i = 0; i < nrows; i++) {
-		for (int j = 0; j < ncols; j++) {
+	for (int i = 0; i < nrow; i++) {
+		for (int j = 0; j < ncol; j++) {
 			cout.width(3);
 			cout << matrix[i][j] << "  ";
 		}
@@ -60,76 +98,45 @@ void print_rand_smatrix(int **matrix, int nrows, int ncols)
 	}
 }
 
-void compressed_matrix(int **matrix, int nrows, int ncols)
+void compressing(int **matrix, int nrow, int ncol)
 {
-	int i, j, col = 0, num = 0;
-	int JA[100], JR[100];
-
-	cout << endl << "-CRS matrix-" << endl;
-
-	cout << "AN:   ";
-	for (i = 0; i < nrows; i++) {
-		for (j = 0; j < ncols; j++) {
-			if ((matrix[i][j] != 0)) {
-				cout.width(3);
-				cout << matrix[i][j] << "  ";
+	int i, j;
+	vector<int> AN;
+	vector<int> JA;
+	vector<int> JR;
+	
+	for (int i = 0; i < nrow; i++) {
+			JR.push_back(AN.size());
+			for (int j = 0; j < ncol; j++) {
+				if (matrix[i][j] != 0) {
+					AN.push_back(matrix[i][j]);
+					JA.push_back(j);
+				}
 			}
 		}
-	}
+		JR.push_back(AN.size());
 
-	cout << endl << "JA:   ";
-	for (i = 0; i < nrows; i++) {
-		for (j = 0; j < ncols; j++) {
-			if ((matrix[i][j] != 0)) {
-				JA[j] = j;
-				col += 1;
+		if (AN.size() > 0 && JR.size() > 0 && JA.size() > 0) {
+			cout << "AN: [";
+			for (int point : AN) {
 				cout.width(3);
-				cout << JA[j] << "  ";
+				cout << point << " ";
 			}
+			cout << "]" << endl;
+			cout << "JA: [";
+			for (int point : JA) {
+				cout.width(3);
+				cout << point << " ";
+			}
+			cout << "]" << endl;
+			cout << "JR: [";
+			for (int point : JR) {
+				cout.width(3);
+				cout << point << " ";
+			}
+			cout << "]" << endl;
 		}
-		JR[0] = 0;
-		JR[i + 1] = col;
-	}
-
-	cout << endl << "JR:   ";
-	for (i = 0; i < nrows + 1; i++) {
-		cout.width(3);
-		cout << JR[i] << "  ";
-	}
-
-	cout << endl << "col  " << col << "\n" << endl;
-}
-
-int main()
-{
-	int **A;
-	int n_rows1, n_cols1;
-	float nz1, nz_neg1;
-
-	int **B;
-	int n_rows2, n_cols2;
-	float nz2, nz_neg2;
-
-	cout << "-Matrix 1 generation-" << endl;
-	cout << "Inpute rows, columns, density (percentage) of non-zero entries and percentage of negative numbers" << endl;
-	cin >> n_rows1 >> n_cols1 >> nz1 >> nz_neg1;
-
-	A = create_rand_smatrix(n_rows1, n_cols1, nz1, nz_neg1);
-	print_rand_smatrix(A, n_rows1, n_cols1);
-	compressed_matrix(A, n_rows1, n_cols1);
-
-	cout << endl << "-Matrix 2 generation-" << endl;
-	cout << "Inpute rows, columns, density (percentage) of non-zero entries and percentage of negative numbers" << endl
-		<< "The numbers must be equal to the number of columns (rows) or rows (columns) of the first matrix." << endl;
-	cin >> n_rows2 >> n_cols2 >> nz2 >> nz_neg2;
-
-	B = create_rand_smatrix(n_rows2, n_cols2, nz2, nz_neg2);
-	print_rand_smatrix(B, n_rows2, n_cols2);
-	compressed_matrix(B, n_rows2, n_cols2);
-
-
-	getchar();
-	getchar();
-
-	return 0;
+		else {
+			cout << "NULL" << endl;
+		}
 }
