@@ -1,6 +1,7 @@
 #include "pch.h"
 #include <iostream>
 #include "Header.h"
+
 using namespace std;
 
 CRS Addition(CRS&, CRS&);
@@ -9,43 +10,19 @@ void Print_result(CRS&, CRS&, CRS&, CRS&);
 
 int main()
 {
-
 	int row; int column;
 	int nz, nz_neg;
-	/*cout << "Enter a matrix1 size here: ";
-	cin >> row >> ch >> column;*/
 
 	cout << "-Matrix 1 generation-" << endl;
 	cout << "Inpute rows, columns, density (percentage) of non-zero entries and percentage of negative numbers" << endl;
 	cin >> row >> column >> nz >> nz_neg;
-
 	CRS matrix1(row, column, nz, nz_neg);
 	
-/*int value;
-	for (int i = 0; i < row; i++) {
-		for (int j = 0; j < column; j++) {
-			cout << "Item [" << i << "][" << j << "]: ";
-			cin >> value;
-			matrix1.Add(value, i, j);
-		}
-	}*/
-	/*cout << "Enter a matrix2 size here: ";
-	cin >> row >> ch >> column;*/
-
 	cout << endl << endl << "-Matrix 2 generation-" << endl;
 	cout << "Inpute rows, columns, density (percentage) of non-zero entries and percentage of negative numbers" << endl
 		<< "The numbers must be equal to the number of columns (rows) or rows (columns) of the first matrix." << endl;
 	cin >> row >> column >> nz >> nz_neg;
-
 	CRS matrix2(row, column, nz, nz_neg);
-	/*value = 0;
-	for (int i = 0; i < row; i++) {
-		for (int j = 0; j < column; j++) {
-			cout << "Item [" << i << "][" << j << "]: ";
-			cin >> value;
-			matrix2.Add(value, i, j);
-		}
-	}*/
 
 	matrix1.Compressing();
 	matrix2.Compressing();
