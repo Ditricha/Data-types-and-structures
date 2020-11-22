@@ -24,48 +24,20 @@ struct ANT_TYPE {
 };
 
 
-//int travlling_salesman_problem(int **, int)
 //int read_matrix(int **,  int);
+//int travlling_salesman_problem(int **, int)
 //double probability(int, ANT_TYPE, double **, double **, int);
 //void initialization_ants(ANT_TYPE[M], int, int);
 //void initialization_length(double **, double **, int);
 //void generation_pheromon(double **, int);
 //void pheromon(ANT_TYPE[M], double, double **, int);
 //ANT_TYPE AntColony(double **, int, int, int);
-//void print_result(ANT_TYPE);
 
 
 int **graph;
 int n;
-
 vector<vector<int>> path;
 
-int travlling_salesman_problem()
-{
-	int i, node, current_pathweight;
-	vector<int> path;
-	for (i = 1; i < n; i++)
-		path.push_back(i);
-
-	int min_path = INT_MAX;
-	vector<int> final_path;
-	do {
-		node = 0;
-		current_pathweight = 0;
-
-		for (i = 0; i < path.size(); i++) {
-			current_pathweight += graph[node][path[i]];
-			node = path[i];
-		}
-		current_pathweight += graph[node][0];
-
-		min_path = min(min_path, current_pathweight);
-
-	} while (next_permutation(path.begin(), path.end()));
-
-	return min_path;
-}
-		
 int read_matrix()
 {
 	int i, j;
@@ -99,6 +71,32 @@ int read_matrix()
 	fin.close();
 	return n;
 }
+
+int travlling_salesman_problem()
+{
+	int i, node, current_pathweight;
+	vector<int> path;
+	for (i = 1; i < n; i++)
+		path.push_back(i);
+
+	int min_path = INT_MAX;
+	vector<int> final_path;
+	do {
+		node = 0;
+		current_pathweight = 0;
+
+		for (i = 0; i < path.size(); i++) {
+			current_pathweight += graph[node][path[i]];
+			node = path[i];
+		}
+		current_pathweight += graph[node][0];
+
+		min_path = min(min_path, current_pathweight);
+
+	} while (next_permutation(path.begin(), path.end()));
+
+	return min_path;
+}		
 
 double probability(int to, ANT_TYPE ant, double **tao, double **epsilon, int n)
 {
@@ -278,35 +276,3 @@ int main()
 	
 	return 0;
 }
-
-//попытки в параметризацию
-/*#include <list>
-
-list <double> params = { 0.001, 0.25, 0.5, 0.75, 1.0 };
-
-list <int> tmax = { 50, 100, 150, 200, 500 };
-#define PAR = 4;
-
-int main() {
-	int row; int col;
-	row = col = 4;
-	int row = 4;
-	int col = 4;
-
-	int **result[4][4];
-	**result = new int *[4];
-		for (int i = 0; i < 4; i++) {
-			**result[i] = new int[4];
-		}
-
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			**result[i][j] = (i + 1) * 10 + (j + 1);
-		}
-	}
-
-	for (int i = 0; i < 4; i++) {
-		delete[] resulting_matrix[i];
-	}
-	delete[] resulting_matrix;
-}*/
