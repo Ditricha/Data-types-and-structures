@@ -5,7 +5,6 @@
 #include <fstream>
 #include <string>
 #include <time.h>
-#include <locale.h>
 
 using std::cout;
 
@@ -14,10 +13,9 @@ using namespace std;
 
 #define ALPHA	1			
 #define BETA	3			
-#define T_MAX	100			
-#define M		20			
-#define p		0.5			
-/*#define SIZE 1000000*/		
+#define TMAX	100			
+#define M	20			
+#define p	0.5					
 
 struct ANT_TYPE {
 	int number; 
@@ -81,7 +79,7 @@ int read_matrix()
 	}
 	fin >> n;
 	graph = new int*[n];
-	for (i = 0; i < n; ++i)
+	for (i = 0; i < n; i++)
 		graph[i] = new int[n];
 
 	while (!fin.eof()) {
@@ -108,15 +106,15 @@ double probability(int to, ANT_TYPE ant, double **tao, double **epsilon, int n)
 	double res = 0.0, sum = 0.0;
 	int from = ant.array[ant.number - 1];
 
-	for (i = 0; i < ant.number; ++i) {
+	for (i = 0; i < ant.number; i++) {
 		if (to == ant.array[i]) {
 			return 0.0;
 		}
 	}
 
-	for (j = 0; j < n; ++j) {
+	for (j = 0; j < n; j++) {
 		flag = 1;
-		for (i = 0; i < ant.number; ++i) {
+		for (i = 0; i < ant.number; i++) {
 			if (j == ant.array[i]) {
 				flag = 0;
 			}
@@ -134,9 +132,9 @@ double probability(int to, ANT_TYPE ant, double **tao, double **epsilon, int n)
 void initialization_length(double **epsilon, int **graph, int n)
 {
 	int i, j;
-	for (i = 0; i < n; ++i) {
+	for (i = 0; i < n; i++) {
 		epsilon[i] = (double *)malloc(sizeof(double) * n);
-		for (j = 0; j < n; ++j) {
+		for (j = 0; j < n; j++) {
 			if (i != j) {
 				epsilon[i][j] = 1.0 / graph[i][j];
 			}
@@ -148,9 +146,9 @@ void generation_pheromon(double **tao, int n)
 {
 	int i, j;
 	srand((unsigned)time(NULL));
-	for (i = 0; i < n; ++i) {
+	for (i = 0; i < n; i++) {
 		tao[i] = (double *)malloc(sizeof(double) * n);
-		for (j = 0; j < n; ++j) {
+		for (j = 0; j < n; j++) {
 			tao[i][j] = 1 + (n * rand() / RAND_MAX);
 		}
 	}
@@ -158,7 +156,7 @@ void generation_pheromon(double **tao, int n)
                                                           
 void initialization_ants(ANT_TYPE ants[M], int n, int city_1)
 {
-	for (int k = 0; k < M; ++k) {
+	for (int k = 0; k < M; k++) {
 		ants[k].number = 0;
 		ants[k].length = 0.0;
 		ants[k].array = (int *)malloc(sizeof(int) * n);
@@ -168,7 +166,7 @@ void initialization_ants(ANT_TYPE ants[M], int n, int city_1)
                                                             
 void pheromon(ANT_TYPE ants[M], double Q, double **tao, int k)
 {
-	for (int i = 0; i < ants[k].number - 1; ++i) {
+	for (int i = 0; i < ants[k].number - 1; i++) {
 		int from = ants[k].array[i % ants[k].number];
 		int to = ants[k].array[(i + 1) % ants[k].number];
 		tao[from][to] += Q / ants[k].length;
@@ -200,12 +198,12 @@ ANT_TYPE ant_colony(int **graph, int n, int city_1, int city_2)
 
 	initialization_ants(ants, n, city_1);
 
-	for (t = 0; t < T_MAX; ++t) {
-		for (k = 0; k < M; ++k) {
+	for (t = 0; t < TMAX; t++) {
+		for (k = 0; k < M; k++) {
 			do {
 				J_max = -1;
 				P_max = 0.0;
-				for (j = 0; j < n; ++j) {
+				for (j = 0; j < n; j++) {
 					if (ants[k].array[ants[k].number - 1] != j) {
 						P = probability(j, ants[k], tao, epsilon, n);
 						if (P != 0 && P >= P_max) {
@@ -225,15 +223,15 @@ ANT_TYPE ant_colony(int **graph, int n, int city_1, int city_2)
 			if (ants[k].length < path.length || path.length < 0) { 
 				path.number = ants[k].number;
 				path.length = ants[k].length;
-				for (i = 0; i < path.number; ++i) {
+				for (i = 0; i < path.number; i++) {
 					path.array[i] = ants[k].array[i];
 				}
 			}
 			ants[k].number = 1;
 			ants[k].length = 0.0;
 		}
-		for ( i = 0; i < n; ++i) {
-			for (j = 0; j < n; ++j) {
+		for ( i = 0; i < n; i++) {
+			for (j = 0; j < n; j++) {
 				if (i != j) {
 					tao[i][j] *= (1 - p);
 				}
@@ -245,7 +243,6 @@ ANT_TYPE ant_colony(int **graph, int n, int city_1, int city_2)
 
 	return path;
 }
-
 
 int main()
 {
