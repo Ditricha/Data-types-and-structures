@@ -11,29 +11,27 @@ int main()
 {
 	ifstream input;
 	input.open("input.txt");
-	INode* root = BuildTree(input);
+	INode* root = build_tree(input);
 	input.close();
 
 	string code;
 	HuffCode hc;
-	hc.GenerateCodes(root, code);
+	hc.generate_codes(root, code);
 
 	ofstream output;
 	output.open("encoded.txt");
 
 	input.open("input.txt");
-	string encodedString = hc.encode(input);
-	output << encodedString;
+	string encoded_string = hc.encode(input);
+	output << encoded_string;
 	output.close();
 	input.close();
 
-	/*cout << encodedString << endl;*/
-
-	string decodedString;
-	hc.decodeFromRoot(root, encodedString, decodedString);
+	string decoded_string;
+	hc.decode_from_root(root, encoded_string, decoded_string);
 
 	output.open("decoded.txt");
-	output << decodedString;
+	output << decoded_string;
 	output.close();
 
 	getchar();
