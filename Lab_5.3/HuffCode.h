@@ -1,6 +1,4 @@
 #pragma
-
-
 #include "HuffTree.h"
 #include <bitset>
 
