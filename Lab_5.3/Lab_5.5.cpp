@@ -5,20 +5,18 @@
 #include "HuffTree.h"
 #include "HuffCode.h"
 
-
-
 using namespace std;
 
 int main()
 {
 	ifstream input;
 	input.open("input.txt");
-	INode* root = Build_Tree(input);
+	INode* root = BuildTree(input);
 	input.close();
 
 	string code;
 	HuffCode hc;
-	hc.Generate_Codes(root, code);
+	hc.GenerateCodes(root, code);
 
 	ofstream output;
 	output.open("encoded.txt");
