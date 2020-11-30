@@ -50,7 +50,7 @@ struct NodeCmp
 	bool operator()(const INode* lhs, const INode* rhs) const { return lhs->f > rhs->f; }
 };
 
-INode* Build_Tree(ifstream& input)
+INode* BuildTree(ifstream& input)
 {
 	map <char, int> letterFrequency;
 	map<char, int>::iterator i_letter;
