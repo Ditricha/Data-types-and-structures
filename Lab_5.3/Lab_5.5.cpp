@@ -12,16 +12,16 @@ using namespace std;
 int main()
 {
 	ifstream input;
-	input.open("input.txt");  //  The input file
-	INode* root = BuildTree(input);
+	input.open("input.txt");
+	INode* root = Build_Tree(input);
 	input.close();
 
 	string code;
 	HuffCode hc;
-	hc.GenerateCodes(root, code);
+	hc.Generate_Codes(root, code);
 
 	ofstream output;
-	output.open("encodedFile.txt");
+	output.open("encoded.txt");
 
 	input.open("input.txt");
 	string encodedString = hc.encode(input);
@@ -34,7 +34,7 @@ int main()
 	string decodedString;
 	hc.decodeFromRoot(root, encodedString, decodedString);
 
-	output.open("decodedFile.txt");
+	output.open("decoded.txt");
 	output << decodedString;
 	output.close();
 
